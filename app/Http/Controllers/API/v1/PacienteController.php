@@ -15,7 +15,12 @@ class PacienteController extends Controller
      */
     public function index()
     {
-        //
+        $patients = Paciente::all()->sortBy('pac_nome');
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Records founds successfully',
+            'pacientes' => $patients
+        ]);
     }
 
     /**
@@ -26,7 +31,16 @@ class PacienteController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $patient = Paciente::create([
+            'pac_nome' => $request->input('pac_nome', ''),
+            'pac_dataNascimento' => $request->input('pac_dataNascimento', '')
+        ]);
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Paciente created successfully',
+            'pacientes' => $patient
+        ]);
     }
 
     /**
@@ -37,7 +51,12 @@ class PacienteController extends Controller
      */
     public function show(Paciente $paciente)
     {
-        //
+        Paciente::find($paciente);
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Record found successfully',
+            'paciente' => $paciente
+        ]);
     }
 
     /**
@@ -49,7 +68,15 @@ class PacienteController extends Controller
      */
     public function update(Request $request, Paciente $paciente)
     {
-        //
+        Paciente::find($paciente);
+        $paciente->pac_nome = $request->input('pac_nome');
+        $paciente->pac_dataNascimento = $request->input('pac_dataNascimento');
+        $paciente->update();
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Record updated successfully',
+            'paciente' => $paciente
+        ]);
     }
 
     /**
@@ -60,6 +87,12 @@ class PacienteController extends Controller
      */
     public function destroy(Paciente $paciente)
     {
-        //
+        Paciente::find($paciente);
+        $paciente->delete();
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Record deleted successfully',
+            'paciente' => $paciente
+        ]);
     }
 }
