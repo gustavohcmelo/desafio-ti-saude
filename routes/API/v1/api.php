@@ -23,4 +23,28 @@ Route::prefix('auth')->group(function(){
 
 Route::middleware('auth:api')->group(function(){
 
+    /* Routes CRUD to Paciente Model */
+    Route::resource('pacientes', \App\Http\Controllers\API\v1\PacienteController::class);
+
+    /* Routes CRUD to Plano Model */
+    Route::resource('planos', \App\Http\Controllers\API\v1\PlanoController::class);
+
+    /* Routes CRUD to Consulta Model */
+    Route::resource('consultas', \App\Http\Controllers\API\v1\ConsultaController::class);
+
+    /* Routes CRUD to Procedimento Model */
+    Route::resource('procedimentos', \App\Http\Controllers\API\v1\ProcedimentoController::class);
+
+    /* Routes CRUD to Medico Model */
+    Route::resource('medicos', \App\Http\Controllers\API\v1\MedicoController::class);
+    
+    /* Routes CRUD to Telefone Model */
+    Route::resource('telefones', \App\Http\Controllers\API\v1\TelefoneController::class);
+
+    /* Routes CRUD to Paciente_plano Model */
+    Route::resource('paciente-plano', \App\Http\Controllers\API\v1\PacientePlanoController::class);
+
+    /* Routes CRUD to Consulta_procedimento Model */
+    Route::resource('consulta-procedimento', \App\Http\Controllers\API\v1\ConsultaProcedimentoController::class);
+
 });
