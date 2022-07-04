@@ -4,7 +4,7 @@ namespace App\Http\Controllers\API\v1;
 
 use App\Http\Controllers\Controller;
 use App\Models\Telefone;
-use Illuminate\Http\Request;
+use App\Http\Requests\API\v1\TelefoneRequest;
 
 class TelefoneController extends Controller
 {
@@ -15,7 +15,24 @@ class TelefoneController extends Controller
      */
     public function index()
     {
-        //
+        try
+        {
+            $all = Telefone::all();
+
+            return response()->json([
+                'status'    => 'success',
+                'message'   => 'Records founds successfully',
+                'data' => $all
+            ]);
+        }
+        catch (\Exception $e)
+        {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Records founds failed',
+                'details' => $e->getMessage()
+            ],422);
+        }
     }
 
     /**
@@ -24,9 +41,29 @@ class TelefoneController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(TelefoneRequest $request)
     {
-        //
+        try
+        {
+            $phone = Telefone::create([
+                'pac_codigo'            => $request->pac_codigo,
+                'tel_descricao'         => $request->tel_descricao
+            ]);
+
+            return response()->json([
+                'status'    => 'success',
+                'message'   => 'Telefone created successfully',
+                'pacientes' => $phone
+            ]);
+        }
+        catch (\Exception $e)
+        {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Telefone created failed',
+                'details' => $e->getMessage()
+            ],422);
+        }
     }
 
     /**
@@ -35,9 +72,26 @@ class TelefoneController extends Controller
      * @param  \App\Models\Telefone  $telefone
      * @return \Illuminate\Http\Response
      */
-    public function show(Telefone $telefone)
+    public function show($telefone)
     {
-        //
+        try
+        {
+            $found = Telefone::findOrFail($telefone);
+
+            return response()->json([
+                'status'    => 'success',
+                'message'   => 'Record found successfully',
+                'data'  => $found
+            ]);
+        }
+        catch (\Exception $e)
+        {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Record found failed',
+                'details' => $e->getMessage()
+            ],422);
+        }
     }
 
     /**
@@ -47,9 +101,29 @@ class TelefoneController extends Controller
      * @param  \App\Models\Telefone  $telefone
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Telefone $telefone)
+    public function update(TelefoneRequest $request, $telefone)
     {
-        //
+        try
+        {
+            $found = Telefone::findOrFail($telefone);
+            $found->pac_codigo      = $request->pac_codigo;
+            $found->tel_descricao   = $request->tel_descricao;
+            $found->update();
+
+            return response()->json([
+                'status'    => 'success',
+                'message'   => 'Record updated successfully',
+                'telefone'  => $found
+            ]);
+        }
+        catch (\Exception $e)
+        {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Record updated failed',
+                'details' => $e->getMessage()
+            ],422);
+        }
     }
 
     /**
@@ -58,8 +132,25 @@ class TelefoneController extends Controller
      * @param  \App\Models\Telefone  $telefone
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Telefone $telefone)
+    public function destroy($telefone)
     {
-        //
+        try
+        {
+            $found = Telefone::findOrFail($telefone);
+            $found->delete();
+
+            return response()->json([
+                'status'    => 'success',
+                'message'   => 'Record deleted successfully'
+            ]);
+        }
+        catch (\Exception $e)
+        {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Record deleted failed',
+                'details' => $e->getMessage()
+            ],422);
+        }
     }
 }

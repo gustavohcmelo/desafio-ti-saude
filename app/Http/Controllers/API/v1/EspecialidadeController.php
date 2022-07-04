@@ -15,7 +15,23 @@ class EspecialidadeController extends Controller
      */
     public function index()
     {
-        //
+        try
+        {
+            $epecs = Especialidade::all()->sortBy('espec_nome');
+
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Records founds successfully',
+                'data' => $epecs
+            ]);
+        } catch (\Exception $e)
+        {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Records founds failed',
+                'details' => $e->getMessage()
+            ],422);
+        }
     }
 
     /**
@@ -26,7 +42,25 @@ class EspecialidadeController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        try
+        {
+            $created = Especialidade::create([
+                'espec_nome' => $request->espec_nome
+            ]);
+
+            return response()->json([
+                'status'    => 'success',
+                'message'   => 'Record created successfully',
+                'created'   => $created
+            ]);
+        } catch (\Exception $e)
+        {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Record created failed',
+                'details' => $e->getMessage()
+            ],422);
+        }
     }
 
     /**
@@ -35,9 +69,25 @@ class EspecialidadeController extends Controller
      * @param  \App\Models\Especialidade  $especialidade
      * @return \Illuminate\Http\Response
      */
-    public function show(Especialidade $especialidade)
+    public function show($especialidade)
     {
-        //
+        try
+        {
+            $espec = Especialidade::findOrFail($especialidade);
+
+            return response()->json([
+                'status'    => 'success',
+                'message'   => 'Record found successfully',
+                'data'  => $espec
+            ]);
+        } catch (\Exception $e)
+        {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Record found failed',
+                'details' => $e->getMessage()
+            ],422);
+        }
     }
 
     /**
@@ -47,9 +97,27 @@ class EspecialidadeController extends Controller
      * @param  \App\Models\Especialidade  $especialidade
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Especialidade $especialidade)
+    public function update(Request $request, $especialidade)
     {
-        //
+        try 
+        {
+            $found = Especialidade::findOrFail($especialidade);
+            $found->espec_nome = $request->espec_nome;
+            $found->update();
+    
+            return response()->json([
+                'status'    => 'success',
+                'message'   => 'Record updated successfully',
+            ]);
+        }
+        catch (\Exception $e)
+        {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Record updated failed',
+                'details' => $e->getMessage()
+            ],422);
+        }
     }
 
     /**
@@ -58,8 +126,25 @@ class EspecialidadeController extends Controller
      * @param  \App\Models\Especialidade  $especialidade
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Especialidade $especialidade)
+    public function destroy($especialidade)
     {
-        //
+        try
+        {
+            $found = Especialidade::findOrFail($especialidade);
+            $found->delete();
+
+            return response()->json([
+                'status'    => 'success',
+                'message'   => 'Record deleted successfully'
+            ]);
+        }
+        catch (\Exception $e)
+        {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Record delete failed',
+                'details' => $e->getMessage()
+            ],422);
+        }
     }
 }

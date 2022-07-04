@@ -30,8 +30,22 @@ class Paciente extends Model
      * @var array
      */
     protected $fillable = [
-        'pac_codigo',
         'pac_nome',
         'pac_dataNascimento'
     ];
+
+    public function telefone()
+    {
+        return $this->hasMany(Telefone::class, 'pac_codigo');
+    }
+
+    public function paciente_plano()
+    {
+        return $this->hasMany(Paciente_plano::class, 'pac_codigo');
+    }
+
+    public function consulta()
+    {
+        return $this->belongsTo(Consulta::class, 'pac_codigo');
+    }
 }

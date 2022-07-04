@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreatePacientesTable extends Migration
+class CreateEspecialidadesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,9 @@ class CreatePacientesTable extends Migration
      */
     public function up()
     {
-        Schema::create('pacientes', function (Blueprint $table) {
-            $table->unsignedInteger('pac_codigo')->autoIncrement();
-            $table->string('pac_nome', 150);
-            $table->date('pac_dataNascimento');
+        Schema::create('especialidades', function (Blueprint $table) {
+            $table->unsignedInteger('espec_codigo')->autoIncrement();
+            $table->string('espec_nome', 150);
             $table->timestamps();
             $table->softDeletes();
             $table->integer('created_by');
@@ -31,6 +30,6 @@ class CreatePacientesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('pacientes');
+        Schema::dropIfExists('especialidades');
     }
 }

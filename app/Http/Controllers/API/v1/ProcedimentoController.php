@@ -15,7 +15,23 @@ class ProcedimentoController extends Controller
      */
     public function index()
     {
-        //
+        try
+        {
+            $all = Procedimento::with('medico')->get();
+
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Records founds successfully',
+                'data' => $all
+            ]);
+        } catch (\Exception $e)
+        {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Records founds failed',
+                'details' => $e->getMessage()
+            ],422);
+        }
     }
 
     /**
@@ -26,7 +42,27 @@ class ProcedimentoController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        try
+        {
+            $created = Procedimento::create([
+                'med_codigo'  => $request->med_codigo,
+                'proc_nome'    => $request->proc_nome,
+                'proc_valor'   => $request->proc_valor
+            ]);
+
+            return response()->json([
+                'status'    => 'success',
+                'message'   => 'Record created successfully',
+                'created'   => $created
+            ]);
+        } catch (\Exception $e)
+        {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Record created failed',
+                'details' => $e->getMessage()
+            ],422);
+        }
     }
 
     /**
@@ -35,9 +71,25 @@ class ProcedimentoController extends Controller
      * @param  \App\Models\Procedimento  $procedimento
      * @return \Illuminate\Http\Response
      */
-    public function show(Procedimento $procedimento)
+    public function show($procedimento)
     {
-        //
+        try
+        {
+            $found = Procedimento::with('medico')->findOrFail($procedimento);
+
+            return response()->json([
+                'status'    => 'success',
+                'message'   => 'Record found successfully',
+                'data'  => $found
+            ]);
+        } catch (\Exception $e)
+        {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Record found failed',
+                'details' => $e->getMessage()
+            ],422);
+        }
     }
 
     /**
@@ -47,9 +99,29 @@ class ProcedimentoController extends Controller
      * @param  \App\Models\Procedimento  $procedimento
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Procedimento $procedimento)
+    public function update(Request $request, $procedimento)
     {
-        //
+        try 
+        {
+            $found = Procedimento::findOrFail($procedimento);
+            $found->med_codigo  = $request->med_codigo;
+            $found->proc_nome   = $request->proc_nome;
+            $found->proc_valor  = $request->proc_valor;
+            $found->update();
+    
+            return response()->json([
+                'status'    => 'success',
+                'message'   => 'Record updated successfully',
+            ]);
+        }
+        catch (\Exception $e)
+        {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Record updated failed',
+                'details' => $e->getMessage()
+            ],422);
+        }
     }
 
     /**
@@ -58,8 +130,25 @@ class ProcedimentoController extends Controller
      * @param  \App\Models\Procedimento  $procedimento
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Procedimento $procedimento)
+    public function destroy($procedimento)
     {
-        //
+        try
+        {
+            $found = Procedimento::findOrFail($procedimento);
+            $found->delete();
+
+            return response()->json([
+                'status'    => 'success',
+                'message'   => 'Record deleted successfully'
+            ]);
+        }
+        catch (\Exception $e)
+        {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Record delete failed',
+                'details' => $e->getMessage()
+            ],422);
+        }
     }
 }

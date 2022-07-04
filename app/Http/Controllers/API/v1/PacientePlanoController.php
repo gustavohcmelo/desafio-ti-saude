@@ -15,7 +15,23 @@ class PacientePlanoController extends Controller
      */
     public function index()
     {
-        //
+        try
+        {
+            $all = Paciente_plano::with(['paciente', 'plano'])->get();
+
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Records founds successfully',
+                'data' => $all
+            ]);
+        } catch (\Exception $e)
+        {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Records founds failed',
+                'details' => $e->getMessage()
+            ],422);
+        }
     }
 
     /**
@@ -26,7 +42,27 @@ class PacientePlanoController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        try
+        {
+            $created = Paciente_plano::create([
+                'pac_codigo'    => $request->pac_codigo,
+                'plano_codigo'  => $request->plano_codigo,
+                'nr_contrato'   => $request->nr_contrato
+            ]);
+
+            return response()->json([
+                'status'    => 'success',
+                'message'   => 'Record created successfully',
+                'created'   => $created
+            ]);
+        } catch (\Exception $e)
+        {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Record created failed',
+                'details' => $e->getMessage()
+            ],422);
+        }
     }
 
     /**
@@ -35,9 +71,25 @@ class PacientePlanoController extends Controller
      * @param  \App\Models\Paciente_plano  $paciente_plano
      * @return \Illuminate\Http\Response
      */
-    public function show(Paciente_plano $paciente_plano)
+    public function show($paciente_plano)
     {
-        //
+        try
+        {
+            $found = Paciente_plano::with(['paciente', 'plano'])->findOrFail($paciente_plano);
+
+            return response()->json([
+                'status'    => 'success',
+                'message'   => 'Record found successfully',
+                'data'  => $found
+            ]);
+        } catch (\Exception $e)
+        {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Record found failed',
+                'details' => $e->getMessage()
+            ],422);
+        }
     }
 
     /**
@@ -47,9 +99,29 @@ class PacientePlanoController extends Controller
      * @param  \App\Models\Paciente_plano  $paciente_plano
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Paciente_plano $paciente_plano)
+    public function update(Request $request, $paciente_plano)
     {
-        //
+        try 
+        {
+            $found = Paciente_plano::findOrFail($paciente_plano);
+            $found->pac_codigo      = $request->pac_codigo;
+            $found->plano_codigo    = $request->plano_codigo;
+            $found->nr_contrato     = $request->nr_contrato;
+            $found->update();
+    
+            return response()->json([
+                'status'    => 'success',
+                'message'   => 'Record updated successfully',
+            ]);
+        }
+        catch (\Exception $e)
+        {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Record updated failed',
+                'details' => $e->getMessage()
+            ],422);
+        }
     }
 
     /**
@@ -58,8 +130,25 @@ class PacientePlanoController extends Controller
      * @param  \App\Models\Paciente_plano  $paciente_plano
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Paciente_plano $paciente_plano)
+    public function destroy($paciente_plano)
     {
-        //
+        try
+        {
+            $found = Paciente_plano::findOrFail($paciente_plano);
+            $found->delete();
+
+            return response()->json([
+                'status'    => 'success',
+                'message'   => 'Record deleted successfully'
+            ]);
+        }
+        catch (\Exception $e)
+        {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Record delete failed',
+                'details' => $e->getMessage()
+            ],422);
+        }
     }
 }
