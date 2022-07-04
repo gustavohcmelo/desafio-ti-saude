@@ -34,6 +34,7 @@ class Paciente extends Model
         'pac_dataNascimento'
     ];
 
+    /* Relationships area */
     public function telefone()
     {
         return $this->hasMany(Telefone::class, 'pac_codigo');

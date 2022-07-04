@@ -38,9 +38,11 @@ class Consulta extends Model
         'cons_particular'
     ];
 
+
+    /* Relationships area */
     public function paciente()
     {
-        return $this->hasMany(Paciente::class, 'pac_codigo');
+        return $this->belongsTo(Paciente::class, 'pac_codigo');
     }
 
     public function medico()

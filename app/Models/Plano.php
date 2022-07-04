@@ -35,6 +35,7 @@ class Plano extends Model
         'plano_telefone'
     ];
 
+    /* Relationships area */
     public function paciente_plano()
     {
         return $this->hasMany(Paciente_plano::class, 'plano_codigo');

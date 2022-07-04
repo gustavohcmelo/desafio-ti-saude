@@ -36,9 +36,10 @@ class Procedimento extends Model
         'proc_valor'
     ];
 
+    /* Relationships area */
     public function medico()
     {
-        return $this->hasMany(Medico::class, 'med_codigo');
+        return $this->belongsTo(Medico::class, 'med_codigo');
     }
 
     public function consulta_procedimento()

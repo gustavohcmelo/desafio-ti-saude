@@ -36,6 +36,7 @@ class Telefone extends Model
         'tel_descricao'
     ];
 
+    /* Relationships area */
     public function paciente()
     {
         return $this->belongsTo(Paciente::class, 'pac_codigo');

@@ -34,6 +34,7 @@ class Especialidade extends Model
         'espec_nome'
     ];
 
+    /* Relationships area */
     public function medico()
     {
         return $this->belongsTo(Medico::class, 'espec_codigo');

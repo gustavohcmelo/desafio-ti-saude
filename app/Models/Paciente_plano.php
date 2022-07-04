@@ -36,6 +36,7 @@ class Paciente_plano extends Model
         'nr_contrato'
     ];
 
+    /* Relationships area */
     public function paciente()
     {
         return $this->belongsTo(Paciente::class, 'pac_codigo');

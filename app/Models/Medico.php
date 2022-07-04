@@ -36,6 +36,7 @@ class Medico extends Model
         'med_crm'
     ];
 
+    /* Relationships area */
     public function especialidade()
     {
         return $this->belongsTo(Especialidade::class, 'espec_codigo');
@@ -43,7 +44,7 @@ class Medico extends Model
 
     public function procedimento()
     {
-        return $this->belongsTo(procedimento::class, 'med_codigo');
+        return $this->hasMany(procedimento::class, 'med_codigo');
     }
 
     public function consulta()

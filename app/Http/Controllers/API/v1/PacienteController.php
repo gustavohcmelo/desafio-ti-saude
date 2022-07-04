@@ -51,7 +51,7 @@ class PacienteController extends Controller
                 'pac_dataNascimento'    => $request->pac_dataNascimento
             ]);
 
-            if($request->pac_telefone){
+            if($request->has('pac_telefone')){
                 foreach($request->pac_telefone as $phone){
                     Telefone::create([
                         'pac_codigo' => $created->pac_codigo,
@@ -118,7 +118,7 @@ class PacienteController extends Controller
             $found->pac_dataNascimento   = $request->pac_dataNascimento;
             $found->update();
 
-            if($request->pac_telefone){
+            if($request->has('pac_telefone')){
                 foreach($request->pac_telefone as $id => $phone){
                     Telefone::find($id)->update([
                         'tel_descricao' => $phone

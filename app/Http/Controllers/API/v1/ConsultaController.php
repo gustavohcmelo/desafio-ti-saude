@@ -53,7 +53,7 @@ class ConsultaController extends Controller
                 'cons_particular'   => $request->cons_particular
             ]);
 
-            if($request->procedimento){
+            if($request->has('procedimento')){
                 $procedimento = $this->storeRelationConsultaProcedimento($created->cons_codigo, $request->procedimento);
                 $created->procedimento = $procedimento;
             }
@@ -84,6 +84,9 @@ class ConsultaController extends Controller
         try
         {
             $found = Consulta::with(['paciente', 'medico'])->findOrFail($consulta);
+
+            $procedimentos = $this->retrieveRelationConsultaProcedimento($consulta);
+            $found->procedimento = $procedimentos;
 
             return response()->json([
                 'status'    => 'success',
@@ -119,7 +122,7 @@ class ConsultaController extends Controller
             $found->cons_particular     = $request->cons_particular;
             $found->update();
 
-            if($request->procedimento){
+            if($request->has('procedimento')){
                 $procedimento = $this->updateRelationConsultaProcedimento($consulta, $request->procedimento);
                 $found->procedimento = $procedimento;
             }
@@ -174,6 +177,28 @@ class ConsultaController extends Controller
      * @param  \App\Model\Procedimento $procedimento
      * @return \Illuminate\Http\Response
      */
+    private function retrieveRelationConsultaProcedimento($consulta)
+    {
+        try {
+            return Consulta_procedimento::with('procedimento')->whereHas('procedimento', function($p) use ($consulta){
+                $p->where('cons_codigo', '=', $consulta);
+            })->get();
+        } catch (\Exception $e) {
+            return [
+                'status' => 'error',
+                'message' => 'Retrieve relation record failed',
+                'details' => $e->getMessage()
+            ]; 
+        }
+    }
+
+    /**
+     * Insert data to relation Model's Consulta and Procedimento.
+     *
+     * @param  \App\Models\Consulta  $consulta
+     * @param  \App\Model\Procedimento $procedimento
+     * @return \Illuminate\Http\Response
+     */
     private function storeRelationConsultaProcedimento($consulta, $procedimento)
     {
         $created = Consulta_procedimento::create([
@@ -185,7 +210,10 @@ class ConsultaController extends Controller
             return false;
         }
 
-        return $created->cons_proc_codigo;
+        return [
+            'relation'  => $created->cons_proc_codigo,
+            'details'   => $created->procedimento
+        ];
     }
 
     /**
@@ -197,14 +225,27 @@ class ConsultaController extends Controller
      */
     private function updateRelationConsultaProcedimento($consulta, $procedimento)
     {
-        $updated = Consulta_procedimento::where('cons_codigo', $consulta)->update([
-            'proc_codigo' => $procedimento
-        ]);
+        try {
+            $found = Consulta_procedimento::with('procedimento')->whereHas('procedimento', function($p) use ($consulta){
+                $p->where('cons_codigo', '=', $consulta);
+            })->get();
 
-        if(!$updated){
+            $relation_found = Consulta_procedimento::find($found[0]->cons_proc_codigo)->update([
+                'proc_codigo' => $procedimento
+            ]);
+
+            if($relation_found){
+                return Consulta_procedimento::with('procedimento')->findOrFail($found[0]->cons_proc_codigo);
+            }
+
             return false;
-        }
 
-        return Consulta_procedimento::with('procedimento')->findOrFail($consulta);
+        } catch (\Exception $e) {
+            return [
+                'status' => 'error',
+                'message' => 'Update relation record failed',
+                'details' => $e->getMessage()
+            ]; 
+        }
     }
 }

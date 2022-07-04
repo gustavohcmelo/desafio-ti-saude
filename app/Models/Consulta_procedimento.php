@@ -35,6 +35,7 @@ class Consulta_procedimento extends Model
         'cons_codigo'
     ];
 
+    /* Relationships area */
     public function procedimento()
     {
         return $this->belongsTo(Procedimento::class, 'proc_codigo');
